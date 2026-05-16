@@ -11,17 +11,17 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public User registerUser(User user) {
-        return null;
+        return userRepository.save(user);
     }
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return Optional.empty();
+        return userRepository.findByEmail(email);
     }
 }

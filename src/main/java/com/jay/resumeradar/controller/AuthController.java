@@ -3,7 +3,6 @@ package com.jay.resumeradar.controller;
 import com.jay.resumeradar.dto.AuthResponse;
 import com.jay.resumeradar.dto.LoginRequest;
 import com.jay.resumeradar.dto.RegisterRequest;
-import com.jay.resumeradar.entities.User;
 import com.jay.resumeradar.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         var response = authService.login(loginRequest);
         return ResponseEntity.ok(response);
     }

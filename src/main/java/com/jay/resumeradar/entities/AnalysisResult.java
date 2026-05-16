@@ -1,5 +1,6 @@
 package com.jay.resumeradar.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,5 +29,7 @@ public class AnalysisResult{
     private String suggestions;
 
     @Column(name = "analyzed_at", nullable = false, updatable = false)
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime analyzedAt;
 }

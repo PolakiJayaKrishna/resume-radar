@@ -1,5 +1,6 @@
 package com.jay.resumeradar.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,8 @@ public class Resume{
 
     @Lob  // stores as TEXT/LONGTEXT in MySQL. No limit.
     private String extractedText;
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "uploaded_at", nullable = false, updatable = false)
     private LocalDateTime uploadedAt;
 }
