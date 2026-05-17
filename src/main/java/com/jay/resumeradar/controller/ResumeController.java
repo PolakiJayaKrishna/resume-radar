@@ -17,9 +17,9 @@ import java.io.IOException;
 public class ResumeController {
 
     private final ResumeService resumeService;
+
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadResume(@RequestParam("file")MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
+    public ResponseEntity<String> uploadResume(@RequestParam("file") MultipartFile file) throws IOException {
         String extractedText = resumeService.extractTextFromPdf(file);
         return ResponseEntity.ok(extractedText);
     }
