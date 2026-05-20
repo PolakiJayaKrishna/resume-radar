@@ -1,10 +1,13 @@
 package com.jay.resumeradar.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jay.resumeradar.dto.GeminiAnalysisDto;
 import com.jay.resumeradar.dto.GeminiRequest;
 import com.jay.resumeradar.dto.GeminiResponse;
 import com.jay.resumeradar.entities.AnalysisResult;
 import com.jay.resumeradar.repository.AnalysisResultRepository;
 import com.jay.resumeradar.repository.ResumeRepository;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,14 +20,16 @@ public class AnalysisServiceImpl implements AnalysisService {
     private final WebClient webClient;
     private final ResumeRepository resumeRepository;
     private final AnalysisResultRepository analysisResultRepository;
+    private final ObjectMapper objectMapper;
 
     // Manual Constructor to build the WebClient
     public AnalysisServiceImpl(WebClient.Builder webClientBuilder,
                                ResumeRepository resumeRepository,
-                               AnalysisResultRepository analysisResultRepository) {
+                               AnalysisResultRepository analysisResultRepository, ObjectMapper objectMapper) {
         this.webClient = webClientBuilder.build();
         this.resumeRepository = resumeRepository;
         this.analysisResultRepository = analysisResultRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Value("${gemini.api.key}")
@@ -33,15 +38,23 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Value("${gemini.api.url}")
     private String geminiApiUrl;
 
+    @SneakyThrows
     @Override
     public String analyzeResume(Long resumeId, String jobDescription) {
         var resume = resumeRepository.findById(resumeId)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
 
-        String prompt = "Analyze the following resume against the job description.\n" +
-                "Give a matching score out of 100, and list missing skills.\n\n" +
-                "Job Description:\n" + jobDescription + "\n\n" +
-                "Resume Text:\n" + resume.getExtractedText();
+        String prompt =
+                "Analyze the following resume against the job description.\n" +
+                        "Give a matching score out of 100, and list missing skills.\n" +
+                        "Also identify weak areas in the resume and suggest improvements.\n" +
+                        "Keep each item in weakAreas and recommendations short, maximum 1–2 sentences.\n\n" +
+                        "Return only valid JSON with the keys matchScore (number), " +
+                        "missingKeywords (array of strings), weakAreas (array of strings), " +
+                        "recommendations (array of strings), and rewrittenSummary (string). " +
+                        "Do not include any text outside the JSON.\n\n" +
+                        "Job Description:\n" + jobDescription + "\n\n" +
+                        "Resume Text:\n" + resume.getExtractedText();
 
         GeminiRequest.Part part = new GeminiRequest.Part(prompt);
         GeminiRequest.Content content = new GeminiRequest.Content(List.of(part));
@@ -56,14 +69,37 @@ public class AnalysisServiceImpl implements AnalysisService {
                 .block(); // asynchronous. "Pause the Java program here and wait until the HTTP response comes back from Google before moving to the next line"
                           // comes back from Google before moving to the next line"
 
-        String aiScore = response.getCandidates().getFirst().getContent().getParts().getFirst().getText();
+        // Null check added to prevent NullPointerException
+        if (response == null || response.getCandidates() == null || response.getCandidates().isEmpty()) {
+            throw new RuntimeException("Invalid response from Gemini API");
+        }
+
+        String aiJson = response.getCandidates().getFirst().getContent().getParts().getFirst().getText();
+
+        if(aiJson.startsWith("```")){
+            int firstNewLine = aiJson.indexOf('\n');
+            aiJson = aiJson.substring(firstNewLine + 1);
+            int lastBacktick = aiJson.lastIndexOf("```");
+            aiJson = aiJson.substring(0, lastBacktick);
+            aiJson = aiJson.trim();
+        }
+
+
+
+        GeminiAnalysisDto dto = objectMapper.readValue(aiJson , GeminiAnalysisDto.class);
+
         AnalysisResult analysisResult = AnalysisResult.builder()
                 .resumeId(resume.getId())
                 .jobDescription(jobDescription)
-                .suggestions(aiScore)
+                .matchScore(dto.getMatchScore())
+                .missingKeywords(objectMapper.writeValueAsString(dto.getMissingKeywords()))
+                .weakAreas(objectMapper.writeValueAsString(dto.getWeakAreas()))
+                .recommendations(objectMapper.writeValueAsString(dto.getRecommendations()))
+                .rewrittenSummary(dto.getRewrittenSummary())
                 .build();
+
         analysisResultRepository.save(analysisResult);
 
-        return aiScore;
+        return aiJson;
     }
 }

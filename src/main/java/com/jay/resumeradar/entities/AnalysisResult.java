@@ -23,13 +23,22 @@ public class AnalysisResult{
     private Long id;
     private Long resumeId;
 
+    @Lob
     private String jobDescription;
+
     private int matchScore;
+
     @Lob
     private String missingKeywords;
 
     @Lob
-    private String suggestions;
+    private String weakAreas;
+
+    @Lob
+    private String recommendations;
+
+    @Lob
+    private String rewrittenSummary;
 
     @CreationTimestamp
     @Column(name = "analyzed_at", nullable = false, updatable = false)
