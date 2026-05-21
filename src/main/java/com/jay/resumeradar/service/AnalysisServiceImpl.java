@@ -5,6 +5,7 @@ import com.jay.resumeradar.dto.GeminiAnalysisDto;
 import com.jay.resumeradar.dto.GeminiRequest;
 import com.jay.resumeradar.dto.GeminiResponse;
 import com.jay.resumeradar.entities.AnalysisResult;
+import com.jay.resumeradar.entities.AnalysisStatus;
 import com.jay.resumeradar.repository.AnalysisResultRepository;
 import com.jay.resumeradar.repository.ResumeRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,9 +42,18 @@ public class AnalysisServiceImpl implements AnalysisService {
     private String geminiApiUrl;
 
     @Override
-    public void analyzeResume(Long resumeId, String jobDescription) {
+    public Long analyzeResume(Long resumeId, String jobDescription) {
         var resume = resumeRepository.findById(resumeId)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
+
+        AnalysisResult pending = AnalysisResult.builder()
+                .resumeId(resumeId)
+                .jobDescription(jobDescription)
+                .status(AnalysisStatus.PENDING)
+                .build();
+
+        final AnalysisResult saved = analysisResultRepository.save(pending);
+
 
         executorService.submit(() -> {
             try {
@@ -90,21 +100,26 @@ public class AnalysisServiceImpl implements AnalysisService {
                 //Get the data from the results and assign to the fields.
                 GeminiAnalysisDto dto = objectMapper.readValue(aiJson, GeminiAnalysisDto.class);
 
-                AnalysisResult analysisResult = AnalysisResult.builder()
-                        .resumeId(resume.getId())
-                        .jobDescription(jobDescription)
-                        .matchScore(dto.getMatchScore())
-                        .missingKeywords(objectMapper.writeValueAsString(dto.getMissingKeywords()))
-                        .weakAreas(objectMapper.writeValueAsString(dto.getWeakAreas()))
-                        .recommendations(objectMapper.writeValueAsString(dto.getRecommendations()))
-                        .rewrittenSummary(dto.getRewrittenSummary())
-                        .build();
+                saved.setMatchScore(dto.getMatchScore());
+                saved.setWeakAreas(objectMapper.writeValueAsString(dto.getWeakAreas()));
+                saved.setRecommendations(objectMapper.writeValueAsString(dto.getRecommendations()));
+                saved.setRewrittenSummary(objectMapper.writeValueAsString(dto.getRewrittenSummary()));
+                saved.setStatus(AnalysisStatus.COMPLETED);
+                analysisResultRepository.save(saved);
 
-                analysisResultRepository.save(analysisResult);
             }
             catch (Exception e){
+                saved.setStatus(AnalysisStatus.FAILED);
+                analysisResultRepository.save(saved);
                 e.printStackTrace();
             }
         });
+        return saved.getId();
+    }
+
+    @Override
+    public AnalysisResult getResult(Long id) {
+        return analysisResultRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Result Not Found"));
     }
 }

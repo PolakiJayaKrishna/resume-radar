@@ -44,4 +44,7 @@ public class AnalysisResult{
     @Column(name = "analyzed_at", nullable = false, updatable = false)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime analyzedAt;
+
+    @Enumerated(EnumType.STRING)
+    private AnalysisStatus status;
 }
