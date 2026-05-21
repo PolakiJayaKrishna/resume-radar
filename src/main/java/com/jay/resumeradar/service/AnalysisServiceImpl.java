@@ -6,6 +6,7 @@ import com.jay.resumeradar.dto.GeminiRequest;
 import com.jay.resumeradar.dto.GeminiResponse;
 import com.jay.resumeradar.entities.AnalysisResult;
 import com.jay.resumeradar.entities.AnalysisStatus;
+import com.jay.resumeradar.exception.ResourceNotFoundException;
 import com.jay.resumeradar.repository.AnalysisResultRepository;
 import com.jay.resumeradar.repository.ResumeRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -120,6 +121,6 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Override
     public AnalysisResult getResult(Long id) {
         return analysisResultRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Result Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Result not found"));
     }
 }
