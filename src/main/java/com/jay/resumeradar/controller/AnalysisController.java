@@ -15,9 +15,9 @@ public class AnalysisController {
     private final AnalysisService analysisService;
 
     @PostMapping("/score")
-    public ResponseEntity<String> AnalysisResume(@RequestParam Long resumeId, @RequestParam String jobDescription){
-        String result = analysisService.analyzeResume(resumeId,jobDescription);
+    public ResponseEntity<Void> AnalysisResume(@RequestParam Long resumeId, @RequestParam String jobDescription){
+        analysisService.analyzeResume(resumeId,jobDescription);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.accepted().build(); //202 Immediately
     }
 }
