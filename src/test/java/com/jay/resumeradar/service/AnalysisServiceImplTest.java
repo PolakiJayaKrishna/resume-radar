@@ -3,6 +3,8 @@ package com.jay.resumeradar.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jay.resumeradar.entities.AnalysisResult;
 import com.jay.resumeradar.entities.AnalysisStatus;
+import com.jay.resumeradar.entities.Resume;
+import com.jay.resumeradar.exception.ResourceNotFoundException;
 import com.jay.resumeradar.repository.AnalysisResultRepository;
 import com.jay.resumeradar.repository.ResumeRepository;
 import org.junit.jupiter.api.Test;
@@ -12,8 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
@@ -57,6 +58,28 @@ class AnalysisServiceImplTest {
 
     @Test
     void getResult_WhenNotFound_ShouldThrowException() {
-        
+        //Arrange
+        Long fakeId = 999L;
+        when(analysisResultRepository.findById(fakeId)).thenReturn(java.util.Optional.empty());
+
+
+        // --- ACT & ASSERT ---
+        assertThrows(ResourceNotFoundException.class, ()-> analysisService.getResult(fakeId));
     }
+
+    @Test
+    void analyzeResume_Success(){
+        Long fakeId = 2L;
+        String fakeJobDescription = "Give me something to write here";
+        Resume resume = new Resume();
+        resume.setId(fakeId);
+        resume.setExtractedText("This is a fake resume PDF text");
+        when(resumeRepository.findById(fakeId)).thenReturn(java.util.Optional.of(resume));
+
+        AnalysisResult fakeSavedResult = new AnalysisResult();
+        fakeSavedResult.setId(100L);
+        when(analysisResultRepository.save(org.mockito.ArgumentMatchers.any())).thenReturn(fakeSavedResult);
+
+    }
+
 }

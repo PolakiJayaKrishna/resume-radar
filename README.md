@@ -1,12 +1,26 @@
 # 🎯 ResumeRadar: AI-Powered ATS Resume Analyzer
 
+> **Backend-first AI resume scoring API for ATS-style analysis using Google Gemini.**
+
 ![Java](https://img.shields.io/badge/Java-21-orange.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.6-brightgreen.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-Database-blue.svg)
 ![JWT](https://img.shields.io/badge/Security-JWT-red.svg)
 ![Gemini AI](https://img.shields.io/badge/AI-Google%20Gemini-yellow.svg)
+![Testing](https://img.shields.io/badge/Testing-JUnit%205%20%7C%20Mockito-blueviolet.svg)
 
 **ResumeRadar** is an intelligent, backend-heavy Spring Boot application designed to analyze resumes (PDFs) against specific job descriptions. Using **Google's Gemini AI**, the system parses resumes, calculates ATS match scores, identifies missing keywords, and provides actionable recommendations—all processed asynchronously to ensure a highly responsive user experience.
+
+---
+
+## 👨‍💻 Why I Built This & What It Shows
+
+**The Problem:** Standard resume parsers rely on outdated, strict keyword matching. I wanted to build a modern backend that leverages LLMs (Google Gemini) to analyze resumes contextually, just like a real tech recruiter would.
+
+**What this shows about my engineering skills:**
+1. **Scalable Backend Architecture:** I implemented an asynchronous status-polling pattern (`202 Accepted`) using **Java 21 Virtual Threads**. This ensures heavy AI API calls do not block the main web server.
+2. **Robust Security & Error Handling:** Secured endpoints with stateless JWT authentication and handled all errors elegantly using a centralized `@RestControllerAdvice` global exception handler to return predictable JSON.
+3. **Commitment to Quality:** Backed by **JUnit 5 and Mockito** unit tests to ensure business logic remains stable during refactoring.
 
 ---
 
@@ -15,9 +29,10 @@
 * **🔐 Secure Authentication:** Stateless JWT (JSON Web Token) based user registration and login.
 * **📄 Document Parsing:** Native PDF text extraction using Apache PDFBox.
 * **🧠 AI Analysis:** Integration with Google Gemini API via Spring WebClient to generate structured JSON analysis.
-* **⚡ Asynchronous Processing:** Heavy AI workloads are offloaded to background threads using Java `ExecutorService` (Virtual Threads) to prevent blocking the main web server.
-* **🔄 Status Polling:** Implements the `202 Accepted` polling pattern. Users submit resumes and receive an ID instantly, then poll a status endpoint (`PENDING` → `COMPLETED`).
-* **🛡️ Global Exception Handling:** Clean, predictable JSON error responses managed centrally via `@RestControllerAdvice` and custom exceptions (e.g., `ResourceNotFoundException`).
+* **⚡ Asynchronous Processing:** Heavy AI workloads are offloaded to background Virtual Threads (`ExecutorService`).
+* **🔄 Status Polling:** Implements the `PENDING` → `COMPLETED` polling pattern for long-running AI tasks.
+* **🛡️ Global Exception Handling:** Predictable JSON error responses managed centrally.
+* **🧪 Automated Testing:** Service-layer logic tested comprehensively using the AAA pattern with Mockito.
 
 ---
 
@@ -106,9 +121,14 @@ If using IntelliJ, add this to your Run Configuration Environment Variables:
 GEMINI_API_KEY=your_actual_google_api_key_here
 ```
 
-### 4. Run the Application
+### 4. Run the Application & Tests
+Run the server:
 ```bash
 ./mvnw spring-boot:run
+```
+Run the automated test suite:
+```bash
+./mvnw test
 ```
 The server will start on `http://localhost:8080`.
 
@@ -131,8 +151,9 @@ The server will start on `http://localhost:8080`.
 ---
 
 ## 🚧 Upcoming Features (Roadmap)
-- [ ] **Automated Testing:** Full test coverage using JUnit 5 and Mockito.
-- [ ] **AWS Deployment:** CI/CD pipeline deploying the application to AWS EC2/RDS.
+- [x] **Automated Testing:** Full test coverage using JUnit 5 and Mockito.
+- [ ] **AWS Deployment:** Deploying the application to an AWS EC2 instance natively.
+- [ ] **Dockerization (V2):** Containerizing the application and database using Docker Compose.
 - [ ] **Caching:** Redis integration to cache repetitive resume analyses.
 
 ---
