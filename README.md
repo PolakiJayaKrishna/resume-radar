@@ -157,4 +157,4 @@ The server will start on `http://localhost:8080`.
 - [ ] **Caching:** Redis integration to cache repetitive resume analyses.
 
 ---
-*Developed by Jaya Krishna Polaki*
+*Developed by JayaKrishna Polaki (Jay)*
