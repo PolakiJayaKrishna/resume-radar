@@ -8,6 +8,8 @@
 ![JWT](https://img.shields.io/badge/Security-JWT-red.svg)
 ![Gemini AI](https://img.shields.io/badge/AI-Google%20Gemini-yellow.svg)
 ![Testing](https://img.shields.io/badge/Testing-JUnit%205%20%7C%20Mockito-blueviolet.svg)
+![Deployed](https://img.shields.io/badge/Deployed-AWS%20EC2-FF9900?logo=amazon-aws)
+
 
 **ResumeRadar** is an intelligent, backend-heavy Spring Boot application designed to analyze resumes (PDFs) against specific job descriptions. Using **Google's Gemini AI**, the system parses resumes, calculates ATS match scores, identifies missing keywords, and provides actionable recommendations—all processed asynchronously to ensure a highly responsive user experience.
 
@@ -101,6 +103,28 @@ When the analysis is complete, the API returns a highly structured, actionable J
 
 ---
 
+## ☁️ Live Deployment
+
+The backend API is deployed natively on **AWS EC2 (Ubuntu, t3.micro)** in the Asia Pacific (Hyderabad) region.
+
+| | Detail |
+|---|---|
+| **Live API Base URL** | `http://18.60.44.43:8080` |
+| **Platform** | AWS EC2 — Ubuntu 22.04 |
+| **Instance Type** | t3.micro (1 vCPU, 1GB RAM + 1GB SWAP) |
+| **Database** | MySQL 8.x on EC2 (no RDS — 100% free tier) |
+| **Process Management** | `nohup` background process with JVM heap limit (`-Xmx256m`) |
+
+### Quick Test (No Auth Required):
+```bash
+curl -X POST http://18.60.44.43:8080/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"firstName":"Jay","lastName":"Polaki","email":"test@example.com","password":"Test@123","role":"USER"}'
+# Returns: { "token": "eyJ..." }
+```
+
+---
+
 ## 🚀 Setup & Installation
 
 ### 1. Prerequisites
@@ -152,9 +176,10 @@ The server will start on `http://localhost:8080`.
 
 ## 🚧 Upcoming Features (Roadmap)
 - [x] **Automated Testing:** Full test coverage using JUnit 5 and Mockito.
-- [ ] **AWS Deployment:** Deploying the application to an AWS EC2 instance natively.
+- [x] **AWS Deployment:** Backend deployed live on AWS EC2 (Ubuntu, t3.micro) at `http://18.60.44.43:8080`.
 - [ ] **Dockerization (V2):** Containerizing the application and database using Docker Compose.
 - [ ] **Caching:** Redis integration to cache repetitive resume analyses.
+
 
 ---
 *Developed by JayaKrishna Polaki (Jay)*
