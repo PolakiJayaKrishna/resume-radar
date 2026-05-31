@@ -7,6 +7,8 @@ import com.jay.resumeradar.entities.Role;
 import com.jay.resumeradar.repository.UserRepository;
 import com.jay.resumeradar.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import com.jay.resumeradar.entities.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,9 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
+    private final static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -38,6 +43,8 @@ public class AuthServiceImpl implements AuthService {
 
         // 2. Save the User to the MySQL database
         userRepository.save(user);
+
+        log.info("New user registered: {}", user.getEmail());
 
         // 3. Generate a JWT token badge for the new user
         var jwtToken = jwtService.generateToken(user);
@@ -64,6 +71,9 @@ public class AuthServiceImpl implements AuthService {
 
         //Now generate Token
         var jwtToken = jwtService.generateToken(user);
+
+        log.info("User logged in: {}", user.getEmail());
+
         //send the response
         return AuthResponse.builder()
                 .token(jwtToken)

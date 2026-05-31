@@ -16,9 +16,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class AnalysisServiceImpl implements AnalysisService {
+
+    private static final Logger log = LoggerFactory.getLogger(AnalysisServiceImpl.class);
 
     private final WebClient webClient;
     private final ResumeRepository resumeRepository;
@@ -44,6 +48,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     @Override
     public Long analyzeResume(Long resumeId, String jobDescription) {
+        log.info("Analysis requested for resumeId: {}", resumeId);
         var resume = resumeRepository.findById(resumeId)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
 
@@ -54,10 +59,11 @@ public class AnalysisServiceImpl implements AnalysisService {
                 .build();
 
         final AnalysisResult saved = analysisResultRepository.save(pending);
-
+        log.info("Analysis record saved with id: {}, status: PENDING", saved.getId());
 
         executorService.submit(() -> {
             try {
+                log.info("Calling Gemini API for analysisId: {}", saved.getId());
                 String prompt =
                         "Analyze the following resume against the job description.\n" +
                                 "Give a matching score out of 100, and list missing skills.\n" +
@@ -107,12 +113,13 @@ public class AnalysisServiceImpl implements AnalysisService {
                 saved.setRewrittenSummary(objectMapper.writeValueAsString(dto.getRewrittenSummary()));
                 saved.setStatus(AnalysisStatus.COMPLETED);
                 analysisResultRepository.save(saved);
+                log.info("Analysis COMPLETED for analysisId: {}, matchScore: {}", saved.getId(), dto.getMatchScore());
 
             }
             catch (Exception e){
                 saved.setStatus(AnalysisStatus.FAILED);
                 analysisResultRepository.save(saved);
-                e.printStackTrace();
+                log.error("Analysis failed for resumeId: {}", saved.getId(), e);
             }
         });
         return saved.getId();
