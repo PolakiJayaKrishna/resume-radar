@@ -27,7 +27,7 @@ public class SecurityConfig {
 
                 // 3. THE TRAFFIC RULES
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Open Door: Login/Register is public
+                        .requestMatchers("/api/auth/**", "/actuator/***").permitAll() // Open Door: Login/Register and as well as for health endpoint is public
                         .anyRequest().authenticated()                // Closed Door: Everything else needs a Token
                 )
 
