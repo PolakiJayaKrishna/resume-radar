@@ -1,10 +1,8 @@
 # Stage 1: Build the JAR file inside a clean Java 21 environment
-FROM eclipse-temurin:21-jdk-jammy AS builder
+FROM maven:3.9.7-eclipse-temurin-21-jammy AS builder
 WORKDIR /app
 COPY . .
-RUN sed -i 's/\r$//' mvnw
-RUN chmod +x mvnw
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Stage 2: Run the compiled JAR file
 FROM eclipse-temurin:21-jdk-jammy
