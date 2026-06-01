@@ -2,7 +2,8 @@
 FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
 COPY . .
-RUN chmod +x ./mvnw
+RUN sed -i 's/\r$//' mvnw
+RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 # Stage 2: Run the compiled JAR file
