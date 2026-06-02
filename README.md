@@ -150,6 +150,19 @@ The server will start on `http://localhost:8080`. MySQL will be available on por
 
 ---
 
+## 📖 Interactive API Documentation (Swagger UI)
+
+The API is fully documented using OpenAPI 3.0 (Swagger). The live deployment includes an interactive Swagger UI where you can explore endpoints, view schema definitions, and securely inject your JWT token to test the API directly from the browser.
+
+### API Overview
+![Swagger UI Main](assets/swagger-main.png)
+
+### Detailed Schema & Responses
+![Swagger UI Auth Details](assets/swagger-auth.png)
+
+![Swagger UI Analysis Details](assets/swagger-analysis.png)
+---
+
 ## 🔌 API Endpoints
 
 ### Authentication
@@ -174,4 +187,4 @@ The server will start on `http://localhost:8080`. MySQL will be available on por
 
 
 ---
-*Developed by JayaKrishna Polaki (Jay)*
+*Developed by [JayaKrishna Polaki (Jay)](https://www.linkedin.com/in/jayakrishna-polaki/)*
