@@ -8,6 +8,7 @@
 ![JWT](https://img.shields.io/badge/Security-JWT-red.svg)
 ![Gemini AI](https://img.shields.io/badge/AI-Google%20Gemini-yellow.svg)
 ![Testing](https://img.shields.io/badge/Testing-JUnit%205%20%7C%20Mockito-blueviolet.svg)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)
 ![Deployed](https://img.shields.io/badge/Deployed-AWS%20EC2-FF9900?logo=amazon-aws)
 
 
@@ -112,8 +113,9 @@ The backend API is deployed natively on **AWS EC2 (Ubuntu, t3.micro)** in the As
 | **Live API Base URL** | `http://18.60.44.43:8080` |
 | **Platform** | AWS EC2 — Ubuntu 22.04 |
 | **Instance Type** | t3.micro (1 vCPU, 1GB RAM + 1GB SWAP) |
-| **Database** | MySQL 8.x on EC2 (no RDS — 100% free tier) |
-| **Process Management** | `nohup` background process with JVM heap limit (`-Xmx256m`) |
+| **Database** | MySQL 8.x running in Docker Container |
+| **Process Management** | Docker Compose Orchestration (`docker compose up -d`) |
+| **CI/CD** | GitHub Actions Pipeline (Build → Push to Docker Hub) |
 
 ### Quick Test (No Auth Required):
 ```bash
@@ -125,36 +127,26 @@ curl -X POST http://18.60.44.43:8080/api/auth/register \
 
 ---
 
-## 🚀 Setup & Installation
+## 🚀 Setup & Installation (Docker)
+
+The easiest way to run ResumeRadar locally is using Docker Compose.
 
 ### 1. Prerequisites
-* JDK 21 installed
-* MySQL Server running on `localhost:3306`
+* Docker & Docker Compose installed
 * Google Gemini API Key
 
-### 2. Database Setup
-Create a new MySQL database:
-```sql
-CREATE DATABASE resumeradar;
-```
-
-### 3. Environment Variables
-You must provide your Gemini API key to the application environment before running. 
-If using IntelliJ, add this to your Run Configuration Environment Variables:
+### 2. Configure Environment
+Create a hidden `.env` file in the root directory and add your API key:
 ```env
 GEMINI_API_KEY=your_actual_google_api_key_here
 ```
 
-### 4. Run the Application & Tests
-Run the server:
+### 3. Start the Orchestra
+Run the application and database together in the background:
 ```bash
-./mvnw spring-boot:run
+docker-compose up -d
 ```
-Run the automated test suite:
-```bash
-./mvnw test
-```
-The server will start on `http://localhost:8080`.
+The server will start on `http://localhost:8080`. MySQL will be available on port `3306`.
 
 ---
 
@@ -177,7 +169,7 @@ The server will start on `http://localhost:8080`.
 ## 🚧 Upcoming Features (Roadmap)
 - [x] **Automated Testing:** Full test coverage using JUnit 5 and Mockito.
 - [x] **AWS Deployment:** Backend deployed live on AWS EC2 (Ubuntu, t3.micro) at `http://18.60.44.43:8080`.
-- [ ] **Dockerization (V2):** Containerizing the application and database using Docker Compose.
+- [x] **Dockerization:** Containerizing the application and database using Docker Compose, pushed to Docker Hub via GitHub Actions CI/CD.
 - [ ] **Caching:** Redis integration to cache repetitive resume analyses.
 
 
