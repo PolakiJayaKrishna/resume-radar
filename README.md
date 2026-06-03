@@ -20,10 +20,11 @@
 
 **The Problem:** Standard resume parsers rely on outdated, strict keyword matching. I wanted to build a modern backend that leverages LLMs (Google Gemini) to analyze resumes contextually, just like a real tech recruiter would.
 
-**What this shows about my engineering skills:**
-1. **Scalable Backend Architecture:** I implemented an asynchronous status-polling pattern (`202 Accepted`) using **Java 21 Virtual Threads**. This ensures heavy AI API calls do not block the main web server.
-2. **Robust Security & Error Handling:** Secured endpoints with stateless JWT authentication and handled all errors elegantly using a centralized `@RestControllerAdvice` global exception handler to return predictable JSON.
-3. **Commitment to Quality:** Backed by **JUnit 5 and Mockito** unit tests to ensure business logic remains stable during refactoring.
+**Key Engineering Achievements:**
+- **Asynchronous Architecture:** Architected an ATS scoring API using Java 21 and Spring `@Async`, integrating Google Gemini LLM to process PDF resumes in background threads and instantly return HTTP `202 Accepted` responses.
+- **Security & Reliability:** Secured REST API endpoints with stateless JWT authentication and implemented centralized exception handling via `@RestControllerAdvice` to ensure consistent JSON error payloads.
+- **Modern DevOps:** Containerized the application with Docker Compose and established a GitHub Actions CI/CD pipeline for automated deployments to an AWS EC2 instance.
+- **Testing:** Wrote comprehensive unit tests using JUnit 5 and Mockito, ensuring robust core service-layer logic and data integrity.
 
 ---
 
