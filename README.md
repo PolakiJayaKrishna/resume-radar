@@ -184,6 +184,7 @@ The API is fully documented using OpenAPI 3.0 (Swagger). The live deployment inc
 - [x] **Automated Testing:** Full test coverage using JUnit 5 and Mockito.
 - [x] **AWS Deployment:** Backend deployed live on AWS EC2 (Ubuntu, t3.micro) at `http://18.60.44.43:8080`.
 - [x] **Dockerization:** Containerizing the application and database using Docker Compose, pushed to Docker Hub via GitHub Actions CI/CD.
+- [ ] **React Frontend Integration:** Building a modern user interface to interact with the backend API.
 - [ ] **Caching:** Redis integration to cache repetitive resume analyses.
 
 
