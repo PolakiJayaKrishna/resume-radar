@@ -24,6 +24,7 @@
 - **Asynchronous Architecture:** Architected an ATS scoring API using Java 21 and Spring `@Async`, integrating Google Gemini LLM to process PDF resumes in background threads and instantly return HTTP `202 Accepted` responses.
 - **Security & Reliability:** Secured REST API endpoints with stateless JWT authentication and implemented centralized exception handling via `@RestControllerAdvice` to ensure consistent JSON error payloads.
 - **Modern DevOps:** Containerized the application with Docker Compose and established a GitHub Actions CI/CD pipeline for automated deployments to an AWS EC2 instance.
+- **Cross-Origin Support:** Configured global CORS headers across all REST controllers to securely decouple the backend API from external frontend applications.
 - **Testing:** Wrote comprehensive unit tests using JUnit 5 and Mockito, ensuring robust core service-layer logic and data integrity.
 
 ---
