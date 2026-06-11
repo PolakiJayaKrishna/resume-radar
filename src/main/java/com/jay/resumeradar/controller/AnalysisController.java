@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Security Note: "*" is for demo/portfolio purposes. In production, restrict to exact frontend domain.
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/analysis")

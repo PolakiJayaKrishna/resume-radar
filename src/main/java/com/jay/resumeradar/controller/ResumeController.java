@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+// Security Note: "*" is for demo/portfolio purposes. In production, restrict to exact frontend domain.
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
