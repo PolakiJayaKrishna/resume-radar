@@ -80,6 +80,13 @@ class AnalysisServiceImplTest {
         fakeSavedResult.setId(100L);
         when(analysisResultRepository.save(org.mockito.ArgumentMatchers.any())).thenReturn(fakeSavedResult);
 
+        // --- ACT ---
+        Long returnedId = analysisService.analyzeResume(fakeId, fakeJobDescription);
+
+        // --- ASSERT ---
+        // The method must return the saved record's ID synchronously (before async Gemini call completes)
+        assertNotNull(returnedId);
+        assertEquals(100L, returnedId);
     }
 
 }

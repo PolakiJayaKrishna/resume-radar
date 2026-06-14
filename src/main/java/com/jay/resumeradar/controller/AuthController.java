@@ -8,13 +8,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor;  
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 // Security Note: "*" is for demo/portfolio purposes. In production, restrict to exact frontend domain.
 @CrossOrigin(origins = "*")
@@ -32,7 +33,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Email already exists or invalid input")
     })
     @PostMapping("register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         var response = authService.register(request);
         return ResponseEntity.ok(response);
     }
@@ -43,7 +44,7 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Bad credentials (Invalid email or password)")
     })
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         var response = authService.login(loginRequest);
         return ResponseEntity.ok(response);
     }
