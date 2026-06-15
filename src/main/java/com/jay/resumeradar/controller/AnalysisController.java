@@ -1,7 +1,6 @@
 package com.jay.resumeradar.controller;
 
 import com.jay.resumeradar.entities.AnalysisResult;
-import com.jay.resumeradar.repository.AnalysisResultRepository;
 import com.jay.resumeradar.service.AnalysisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
