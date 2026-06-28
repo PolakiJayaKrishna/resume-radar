@@ -12,6 +12,7 @@ import com.jay.resumeradar.repository.ResumeRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import com.jay.resumeradar.entities.AnalysisResult;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -129,5 +130,10 @@ public class AnalysisServiceImpl implements AnalysisService {
     public AnalysisResult getResult(Long id) {
         return analysisResultRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Result not found"));
+    }
+
+    @Override
+    public List<AnalysisResult> getHistoryByResumeId(Long resumeId) {
+        return analysisResultRepository.findByResumeIdOrderByAnalyzedAtDesc(resumeId);
     }
 }

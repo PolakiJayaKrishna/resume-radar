@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 // Security Note: "*" is for demo/portfolio purposes. In production, restrict to exact frontend domain.
 @CrossOrigin(origins = "*")
 @RestController
@@ -43,4 +45,11 @@ public class AnalysisController {
     public ResponseEntity<AnalysisResult> findStatusById(@PathVariable Long id){
         return ResponseEntity.ok(analysisService.getResult(id));
     }
+
+    @Operation(summary = "Get analysis history for a resume")
+    @GetMapping("/history/{resumeId}")
+    public ResponseEntity<List<AnalysisResult>> getHistory(@PathVariable Long resumeId) {
+        return ResponseEntity.ok(analysisService.getHistoryByResumeId(resumeId));
+    }
+
 }
