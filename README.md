@@ -26,6 +26,7 @@
 - **Modern DevOps:** Containerized the application with Docker Compose and established a GitHub Actions CI/CD pipeline for automated deployments to an AWS EC2 instance.
 - **Cross-Origin Support:** Configured global CORS headers across all REST controllers to securely decouple the backend API from external frontend applications.
 - **Testing:** Wrote comprehensive unit tests using JUnit 5 and Mockito, ensuring robust core service-layer logic and data integrity.
+- **API Observability:** Added `/api/analysis/status/{status}` endpoint to filter all analysis records by processing state (PENDING, COMPLETED, FAILED) — enabling real-time monitoring of background job health.
 
 ---
 
