@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jay.resumeradar.dto.GeminiAnalysisDto;
 import com.jay.resumeradar.dto.GeminiRequest;
 import com.jay.resumeradar.dto.GeminiResponse;
-import com.jay.resumeradar.entities.AnalysisResult;
 import com.jay.resumeradar.entities.AnalysisStatus;
 import com.jay.resumeradar.exception.ResourceNotFoundException;
 import com.jay.resumeradar.repository.AnalysisResultRepository;
@@ -66,7 +65,7 @@ public class AnalysisServiceImpl implements AnalysisService {
             try {
                 log.info("Calling Gemini API for analysisId: {}", saved.getId());
                 String prompt =
-                        "Analyze the following resume against the job description.\n" +
+                        "Do a good and deep research as much possible as you can and analyze the following resume against the job description.\n" +
                                 "Give a matching score out of 100, and list missing skills.\n" +
                                 "Also identify weak areas in the resume and suggest improvements.\n" +
                                 "Keep each item in weakAreas and recommendations short, maximum 1–2 sentences.\n\n" +
