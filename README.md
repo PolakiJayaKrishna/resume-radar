@@ -27,6 +27,7 @@
 - **Cross-Origin Support:** Configured global CORS headers across all REST controllers to securely decouple the backend API from external frontend applications.
 - **Testing:** Wrote comprehensive unit tests using JUnit 5 and Mockito, ensuring robust core service-layer logic and data integrity.
 - **API Observability:** Added `/api/analysis/status/{status}` endpoint to filter all analysis records by processing state (PENDING, COMPLETED, FAILED) — enabling real-time monitoring of background job health.
+- **Job Application Tracker API:** Built a full CRUD REST API for job application tracking with ownership-based security — users can only access their own records, enforced by extracting identity from the JWT token via Spring Security's `SecurityContextHolder`.
 
 ---
 
@@ -39,6 +40,7 @@
 * **🔄 Status Polling:** Implements the `PENDING` → `COMPLETED` polling pattern for long-running AI tasks.
 * **🛡️ Global Exception Handling:** Predictable JSON error responses managed centrally.
 * **🧪 Automated Testing:** Service-layer logic tested comprehensively using the AAA pattern with Mockito.
+* **📋 Job Application Tracker:** Full CRUD API to track job applications with status management (APPLIED → INTERVIEW → OFFER / REJECTED). Ownership verified via JWT on every write operation.
 
 ---
 
@@ -180,12 +182,22 @@ The API is fully documented using OpenAPI 3.0 (Swagger). The live deployment inc
 | `POST` | `/api/analysis/score` | Upload PDF (`file`) and `jobDescription`. Returns ID instantly. | ✅ Yes (JWT) |
 | `GET` | `/api/analysis/{id}` | Poll for analysis status and final score JSON. | ✅ Yes (JWT) |
 
+### Job Application Tracker
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/api/applications` | Create a new job application | ✅ Yes (JWT) |
+| `GET` | `/api/applications/allApplications` | Get all applications for the logged-in user | ✅ Yes (JWT) |
+| `GET` | `/api/applications/{id}` | Get a specific application by ID | ✅ Yes (JWT) |
+| `PUT` | `/api/applications/{id}` | Update application name or status | ✅ Yes (JWT) |
+| `DELETE` | `/api/applications/{id}` | Delete an application | ✅ Yes (JWT) |
+
 ---
 
 ## 🚧 Upcoming Features (Roadmap)
 - [x] **Automated Testing:** Full test coverage using JUnit 5 and Mockito.
 - [x] **AWS Deployment:** Backend deployed live on AWS EC2 (Ubuntu, t3.micro) at `http://18.60.44.43:8080`.
 - [x] **Dockerization:** Containerizing the application and database using Docker Compose, pushed to Docker Hub via GitHub Actions CI/CD.
+- [x] **Job Application Tracker API:** Full CRUD REST API with JWT-based ownership security, status tracking (APPLIED/INTERVIEW/OFFER/REJECTED), and live on AWS.
 - [ ] **React Frontend Integration:** Building a modern user interface to interact with the backend API.
 - [ ] **Caching:** Redis integration to cache repetitive resume analyses.
 
